@@ -1,0 +1,11 @@
+Cowberry-boot is a rc script set for sysvinit
+that is designed to be minimal and for booting
+a GNU/Linux system on the Raspberry Pi.
+
+Cowberry-boot does not support daemons, instead
+you should manually configure it to start
+daemons in the way supported by your GNU/Linux
+distribution. Specifically you should start
+network and ntpd so that the clock is set
+correctly.
+
