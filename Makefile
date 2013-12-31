@@ -1,6 +1,6 @@
 CONFS    = rc.conf inittab
 SOURCED  = rc.local.devd.wait
-EXECUTED = rc.local rc.local.hooks rc.local.shutdown rc.multi rc.shutdown rc.single rc.sysvinit
+EXECUTED = rc.local rc.local.hooks rc.local.shutdown rc.multi rc.shutdown rc.single rc.sysinit
 
 
 all:
