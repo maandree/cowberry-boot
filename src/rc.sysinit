@@ -1,9 +1,14 @@
 #!/bin/dash
 # -*- shell-script -*-
 
+SCRIPT=sysinit # Can be used by sourced files to identify where they are being run from
+
 . "/etc/rc.conf"
 
 NO_NETFS="nonfs,nonfs4,nosmbfs,nocifs,nocodafs,noncpfs,noshfs,nofuse,nofuseblk,noglusterfs,nodavfs,nofuse.glusterfs"
+
+# Sanitise PATH
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # Use all TTY:s if not limited
 if [ -z "$TTYS" ]; then
@@ -30,10 +35,31 @@ mount -o rw,remount /
 # Restore the system clock to the time of the previous shutdown, the machine does not have a RTC
 date --set "$(cat "/var/lib/cowberry-boot/clock")"
 
+# Start/trigger devd, load MODULES, and settle devd
+(
+    # You should have the symlinks /sbin/devd and /sbin/devadm pointing to
+    # appropriate commands. /etc/rc.devd.wait should wait for dependencies
+    # those programs have.
+    if [ -f "/etc/rc.devd.wait" ]; then
+	. "/etc/rc.devd.wait"
+    fi
+    wait $_run
+    if [ -n "$BLACKLIST_MODULES" ]; then
+	mkdir -p /run/modprobe.d
+	echo "blacklist $BLACKLIST_MODULES" > /run/modprobe.d/modprobe-blacklist.conf
+    fi
+    devd --daemon
+    devadm trigger --action=add --type=subsystems
+    devadm trigger --action=add --type=devices
+    if [ -n "$LOAD_MODULES" ]; then
+        modprobe -ab $LOAD_MODULES
+    fi
+    devadm settle
+) & _devd=$!
+
 # Set consoles to UTF-8 mode
 (
-    wait $_dev
-    wait $_sys
+    wait $_dev $_sys
     echo 1 > /sys/module/vt/parameters/default_utf8
     for tty in $(seq "$TTYS"); do
 	tty="/dev/tty$tty"
@@ -62,7 +88,7 @@ date --set "$(cat "/var/lib/cowberry-boot/clock")"
 ip link set up dev lo & _lo=$!
 
 # Mount all filesystems in /etc/fstab
-mount -a -t "${NO_NETFS}" -O no_netdev & _fstab=$!
+(wait $_devd ; mount -a -t "${NO_NETFS}" -O no_netdev) & _fstab=$!
 
 # Set timezone
 (
@@ -80,7 +106,7 @@ mount -a -t "${NO_NETFS}" -O no_netdev & _fstab=$!
 (wait $_dev ; [ -f /var/lib/misc/random-seed ] && cp /var/lib/misc/random-seed /dev/urandom) & _rnd=$!
 
 # Wait for remaining processes
-wait $_run $_pts $_shm $_host $_utf8 $_font $_keymap $_lo $_tz $_swap $_rnd
+wait $_pts $_shm $_host $_devd $_utf8 $_font $_keymap $_lo $_tz $_swap $_rnd
 
 # Close /dev/null
 exec 3<&-

@@ -1,8 +1,18 @@
-RUNTIME DEPENDENCIES
+RUNTIME DEPENDENCIES (absolutely required)
 
 	sysvinit
-	dash
+	dash (you can change all scripts to bash if you want to)
 	coreutils
 	util-linux
+
+
+RUNTIME DEPENDENCIES (highly recommended)
+
 	kbd
+
+
+RUNTIME DEPENDENCIES (recommended)
+
+	kmod
+	devd (you have to select providing package)
 
