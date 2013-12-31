@@ -9,3 +9,13 @@ distribution. Specifically you should start
 network and ntpd so that the clock is set
 correctly.
 
+Cowberry-boot is a based on, but is not a fork
+of, pony-initialisation, which is a fork of
+initscripts-fork which in turn is a fork of
+Arch Linux's initscripts. However read_locale.sh
+and inittab is mostly just straight up copies
+of those in pony-initialisation. It is not a
+fork becuase the code is not copied, it is
+rewritten from scratch with knowledge of how it
+is done was already done.
+
