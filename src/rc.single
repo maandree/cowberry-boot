@@ -10,8 +10,8 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # Stop last runlevel
 if [ ! $PREVLEVEL = N ]; then
-    if [ -x "/etc/rc.hooks" ]; then
-	"/etc/rc.hooks" stop-daemons
+    if [ -x "/etc/rc.local.hooks" ]; then
+	"/etc/rc.local.hooks" stop-daemons
     fi
     
     # Terminate (kill if needed) remaining processes
