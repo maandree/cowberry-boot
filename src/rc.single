@@ -1,0 +1,55 @@
+#!/bin/dash
+# -*- shell-script -*-
+
+SCRIPT=single # Can be used by sourced files to identify where they are being run from
+
+. "/etc/rc.conf"
+
+# Sanitise PATH
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Stop last runlevel
+if [ ! $PREVLEVEL = N ]; then
+    if [ -x "/etc/rc.hooks" ]; then
+	"/etc/rc.hooks" stop-daemons
+    fi
+    
+    # Terminate (kill if needed) remaining processes
+    function kill_all
+    {
+	killall5 -$1
+	for i in $(seq $2); do
+	    sleep 0.25
+	    killall5 -18 # send SIGCONT check if the processes are there
+	    _rc=$?
+	    if [ $_rc = 1 -o $_rc = 2 ]; then # 1: /proc is missing, 2: no process found
+		return 0;
+	    fi
+	done
+	return 1
+    }
+    (kill_all 15 40 || kill_all 9 60) >/dev/null 2>&1
+    
+    # Start/trigger devd, load MODULES, and settle devd
+    #   You should have the symlinks /sbin/devd and /sbin/devadm pointing to
+    #   appropriate commands. /etc/rc.devd.wait should wait for dependencies
+    #   those programs have.
+    if [ -n "$BLACKLIST_MODULES" ]; then
+	mkdir -p /run/modprobe.d
+	echo "blacklist $BLACKLIST_MODULES" > /run/modprobe.d/modprobe-blacklist.conf
+    fi
+    devd --daemon
+    devadm trigger --action=add --type=subsystems
+    devadm trigger --action=add --type=devices
+    if [ -n "$LOAD_MODULES" ]; then
+        modprobe -ab $LOAD_MODULES
+    fi
+    devadm settle
+fi
+
+# Enter new runlevel
+if [ $RUNLEVEL = 1 ]; then
+    kill -HUP 1
+    exec init -t1 S
+fi
+
