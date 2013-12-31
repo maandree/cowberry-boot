@@ -1,0 +1,20 @@
+# -*- shell-script -*-
+
+# This is a dash script that is sourced by the
+# rc scripts. Sourcing means that the content
+# of this file is included verbatim as source
+# code in the script that is sourcing it.
+
+# This file is sourced when the script needs
+# wait for dependencies that depend on the
+# implemention of devd that you are using.
+
+if [ $SCRIPT = sysinit ]; then
+    # Here you can wait for processes that
+    # is required to be completed. Take a
+    # look at /etc/rc.sysinit to figure out
+    # what to wait for. By default we will
+    # here wait for all processes that have
+    # been launched.
+    wait $_proc $_sys $_run $_dev $_pts $_shm $_host
+fi
