@@ -5,6 +5,7 @@ RUNTIME DEPENDENCIES (absolutely required)
 	coreutils
 	util-linux
 	grep
+	filesystem
 
 
 RUNTIME DEPENDENCIES (highly recommended)
