@@ -1,9 +1,10 @@
 RUNTIME DEPENDENCIES (absolutely required)
 
 	sysvinit
-	dash (you can change all scripts to bash if you want to)
+	dash (in /bin; you can change all scripts to bash if you want to)
 	coreutils
 	util-linux
+	grep
 
 
 RUNTIME DEPENDENCIES (highly recommended)
