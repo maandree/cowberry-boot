@@ -1,0 +1,10 @@
+#!/bin/dash
+# -*- shell-script -*-
+
+# This script is execute when you have the
+# opportunity to add you own functionality
+
+if [ $1 = stop-daemons ]; then
+    true # You should here stop all running daemons
+fi
+
