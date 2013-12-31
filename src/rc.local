@@ -1,4 +1,5 @@
 #!/bin/dash
+# -*- shell-script -*-
 
 # This file is executed in the end of booting
 # into multi-user. If this file is not executable,
