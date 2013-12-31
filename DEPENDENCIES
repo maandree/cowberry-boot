@@ -1,0 +1,7 @@
+RUNTIME DEPENDENCIES
+
+	sysvinit
+	dash
+	coreutils
+	util-linux
+
