@@ -15,7 +15,7 @@ if [ ! $PREVLEVEL = N ]; then
     fi
     
     # Terminate (kill if needed) remaining processes
-    function kill_all
+    kill_all()
     {
 	killall5 -$1
 	for i in $(seq $2); do
