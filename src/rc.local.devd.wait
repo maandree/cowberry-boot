@@ -14,7 +14,7 @@ if [ $SCRIPT = sysinit ]; then
     # is required to be completed. Take a
     # look at /etc/rc.sysinit to figure out
     # what to wait for. By default we will
-    # here wait for all processes that have
-    # been launched.
-    wait $_proc $_sys $_run $_dev $_pts $_shm $_host
+    # here wait for all, but a few, processes
+    # that have been launched.
+    wait $_proc $_sys $_run $_dev $_shm
 fi
