@@ -89,6 +89,9 @@ umount_all()
 # Wait for killing to finish
 wait $_kill
 
+# Store the system clock so that it can be restored at next boot, the machine does not have a RTC
+mkdir -p "/var/lib/misc" ; date --rfc-3339=ns > "/var/lib/misc/cowberry-boot-clock"
+
 # Unmount non-API swapbacked mountpoints
 umount_all "tmpfs"
 

@@ -36,7 +36,7 @@ deallocvt & _vt=$!
 (wait $_proc ; echo "$HOSTNAME" > /proc/sys/kernel/hostname) & _host=$!
 
 # Restore the system clock to the time of the previous shutdown, the machine does not have a RTC
-date --set "$(cat "/var/lib/cowberry-boot/clock")"
+[ -r "/var/lib/misc/cowberry-boot-clock" ] && date --set "$(cat "/var/lib/misc/cowberry-boot-clock")"
 
 # Start/trigger devd, load MODULES, and settle devd
 (
