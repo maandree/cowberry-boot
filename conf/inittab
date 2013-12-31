@@ -1,0 +1,132 @@
+# This is file is used by sysvinit to determine how to initialise
+# the system after initramfs's early initialisation.
+# 
+# Syntax:  id:runlevels:action:process
+# id must be unique and of the lenght 1 to 4
+# 
+# 
+# Standard runlevels: (it is possible to create more runlevels)
+#   0     Shutdown
+#   1(S)  Single-user				(system maintainance)
+#   2     Networkless single-user
+#   3     Multi-user				(regular boot with console, which can start graphics)
+#   4     Networkless multi-user
+#   5     Multi-user with display manager	(regular boot with graphics)
+#   6     Reboot
+# 
+
+
+
+# Select default runlevel, it can be overriden at bootloader time by inserting the runlevel
+# in the command line (APPEND property in syslinux) with just the runlevel character.
+# You can also skip this to let sysvinit ask the user.
+# 
+# To set the default runlevel to *, set the following line to:  id:*:initdefault:
+
+id:3:initdefault:
+
+# Default runlevel: 3, multi-user with console and networks but not graphics
+
+
+
+# Select command to run when the user presses <control><alternative>delete during initalisation.
+# Typically one wants to execute some sort of shutdown either to get into singer-user level or
+# reboot the machine.
+# 
+# To set this action to exection * on any runlevel, set the following line to: ca::ctrlaltdel:*
+
+ca::ctrlaltdel:/sbin/shutdown -t3 -r now
+
+# `/sbin/shutdown -t3 -r now`
+# means: reboot immediately but give process a 3 second warning
+
+
+
+# Selection first initisation program to execute, it ignores the runlevels field:
+# This process will run before any other.
+# 
+# To select the program or script *, set the following line to:  rc::sysinit:*
+
+rc::sysinit:/etc/rc.sysinit
+
+
+
+# Here you can set actions to do depending on power states that uninterruptable power supplies can detect.
+# The syntax for the lines is:  id::action:command
+# As you see, the runlevels field is ignored. Keep id unique.
+# Possible values for the action field is:
+# 
+#   powerwait:     Execute process when the power goes down, /sbin/init waits for the process's completion
+#   powerfail:     powerwait, except that /sbin/init does not wait for the process's completion
+#   powerokwait:   Execute process as soon as /sbin/init is informed that the power has been restored
+#   powerfailnow:  Execute process when the battery of the UPS is almost empty and the power is failing
+
+# There are no standard actions here.
+
+
+
+# If you find some sufficient documentation you can use the actions "ondemand" and "kbdrequest" here.
+
+
+
+# Here you can run processes before the runlevel is entered, the syntax for the lines is:  id::action:command
+# As you see, the runlevels field is ignored. Keep id unique.
+# Possible values for the action field is:
+# 
+#   bootwait:  Execute during system boot
+#   boot:      Execute during system boot, /sbin/init should wait for it to terminate
+
+# There are no standard actions here.
+
+
+
+# The remaining portion of this file specifies what to do for the different runlevels,
+# each line is of the syntax:  id:runlevels:action:command
+# The id field must be unique, runlevels a list of runlevels the line applies to (empty for all),
+# command is the command line to execute, and action the behaviour which may be one of the following:
+# 
+#   respawn:  restart whenever it terminates
+#   wait:     run once, /sbin/init should wait for it to terminate
+#   once:     run once
+# 
+# You are advised not to change the id fields so that automatic configurators can understand the configuration.
+
+
+
+# Processes for starting runlevel specific modules and daemons
+
+rs:S12:wait:/etc/rc.single
+rm:345:wait:/etc/rc.multi
+rh:06:wait:/etc/rc.shutdown
+su:S:wait:/sbin/sulogin -p
+
+
+
+# Start virtual console for user interaction so you can use you computer
+c1:345:respawn:/sbin/got tty1 TERM=linux
+c2:34:respawn:/sbin/got tty2 TERM=linux
+c3:34:respawn:/sbin/got tty3 TERM=linux
+c4:34:respawn:/sbin/got tty4 TERM=linux
+
+# This uses gates-of-tartaros. If you prefer, you can use agetty:
+#   c1:345:respawn:/sbin/agetty -8 -s 38400 tty1 linux
+
+
+# Start serial virtual console for KVM and others VMs, uncomment to enable
+#s0:345:respawn:/sbin/agetty -8 -s 9600 ttyS0 linux
+
+
+# Start hypervisor virtual console for Xen and KVM, uncomment to enable
+#h0:345:respawn:/sbin/agetty -8 -s 38400 hvc0 linux
+
+
+
+# Start graphical login manager (display manager). Here are some examples, keep only the one you which
+# to use uncommented
+
+x:5:respawn:/usr/bin/xdm -nodaemon
+#x:5:respawn:/usr/sbin/gdm -nodaemon
+#x:5:respawn:/usr/bin/kdm -nodaemon
+#x:5:respawn:/usr/bin/slim ></dev>/null 2>&1
+
+
