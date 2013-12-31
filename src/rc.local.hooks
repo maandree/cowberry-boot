@@ -4,7 +4,18 @@
 # This script is execute when you have the
 # opportunity to add you own functionality
 
-if [ $1 = stop-daemons ]; then
+if [ $1 = start-daemons ]; then
+    true # You should here start all running daemons
+
+elif [ $1 = start-daemons-wait ]; then
+    wait $2 # You can change this to simply `true` if
+            # you want the getty:s to start while the
+            # daemons are loading. However the daemon
+            # support implemenation may not itself wait
+            # for all daemons to start before exiting.
+
+elif [ $1 = stop-daemons ]; then
     true # You should here stop all running daemons
+
 fi
 

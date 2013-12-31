@@ -1,0 +1,30 @@
+#!/bin/dash
+# -*- shell-script -*-
+
+SCRIPT=multi # Can be used by sourced files to identify where they are being run from
+
+. "/etc/rc.conf"
+
+# Sanitise PATH
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Start daemons
+if [ -x "/etc/rc.local.hooks" ]; then
+    "/etc/rc.local.hooks" start-daemons & _daemon=$1
+fi
+
+# Run /etc/rc.local
+if [ -x "/etc/rc.local" ]; then
+    "/etc/rc.local"
+elif [ -r "/etc/rc.local" ]; then
+    . "/etc/rc.local"
+fi
+
+# Wait for daemons to start
+if [ -x "/etc/rc.local.hooks" ]; then
+    "/etc/rc.local.hooks" start-daemons-wait $_daemon
+fi
+
+# Remove /run/nologin
+rm -f /run/nologin
+
