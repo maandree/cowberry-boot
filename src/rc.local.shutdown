@@ -1,0 +1,17 @@
+#!/bin/dash
+# -*- shell-script -*-
+
+# This file is executed in the beginning the
+# shutdown process. If this file is not executable,
+# it will be sourced into rc.multi instead.
+
+dir="/etc/rc.local.shutdown.d"
+if [ -d "$dir" ]; then
+    for file in $(ls -1 "$dir"); do
+	file = "$dir/$file"
+	if [ -f "$file" -a -x "$file" ]; then
+	    "$file"
+	fi
+    done
+fi
+
