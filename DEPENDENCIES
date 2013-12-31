@@ -4,4 +4,5 @@ RUNTIME DEPENDENCIES
 	dash
 	coreutils
 	util-linux
+	kbd
 

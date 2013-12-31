@@ -17,6 +17,18 @@ mount -o rw,remount /
 # Set hostname
 echo "$HOSTNAME" > /proc/sys/kernel/hostname
 
+# Restore the system clock to the time of the previous shutdown, the machine does not have a RTC
+date --set "$(cat "/var/lib/cowberry-boot/clock")"
+
+# Set consoles to UTF-8 mode
+(
+    echo 1 > /sys/module/vt/parameters/default_utf8
+    for tty in /dev/tty[0-9]*; do
+	kbd_mode -u -C "$tty"
+	"/bin/echo" -en "\e%G" > "$tty" 
+    done
+) & _utf8=$!
+
 # Wait for remaining processes
-wait $_proc $_sys $_run $_pts $_shm
+wait $_proc $_sys $_run $_pts $_shm $_utf8
 
