@@ -6,6 +6,7 @@ RUNTIME DEPENDENCIES (absolutely required)
 	util-linux
 	grep
 	filesystem
+	glibc
 
 
 RUNTIME DEPENDENCIES (highly recommended)
@@ -17,4 +18,17 @@ RUNTIME DEPENDENCIES (recommended)
 
 	kmod
 	devd (you have to select providing package)
+
+
+BUILD DEPENDENCIES
+
+	make
+	gcc
+	glibc
+
+
+INSTALL DEPENDENCIES
+
+	make
+	coreutils
 

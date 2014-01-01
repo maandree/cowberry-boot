@@ -1,4 +1,6 @@
 _/
+bin/
+obj/
 .*
 !.git*
 \#*\#
@@ -6,4 +8,7 @@ _/
 *.swp
 *.swo
 *.bak
+*.o
+*.out
+*.gch
 

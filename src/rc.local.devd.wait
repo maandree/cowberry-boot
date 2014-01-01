@@ -16,5 +16,5 @@ if [ $SCRIPT = sysinit ]; then
     # what to wait for. By default we will
     # here wait for all, but a few, processes
     # that have been launched.
-    wait $_proc $_sys $_run $_dev $_shm
+    cowberry-wait $_proc $_sys $_run $_dev $_shm
 fi

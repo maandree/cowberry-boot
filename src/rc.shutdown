@@ -8,7 +8,7 @@ SCRIPT=shutdown # Can be used by sourced files to identify where they are being 
 # Sanitise PATH
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-print "Initiating shutdown..."
+echo "Initiating shutdown..."
 
 # Open /dev/null so that it does not need to be opened everytime it is used
 exec 3>/dev/null
@@ -29,7 +29,7 @@ fi
 
 # Save random seed
 (
-    install -TDm600 /dev/null >/var/lib/misc/random-seed
+    install -TDm600 /dev/null /var/lib/misc/random-seed
     if [ -r /proc/sys/kernel/random/poolsize ]; then
 	read POOLSIZE < /proc/sys/kernel/random/poolsize
 	POOLSIZE=$(( POOLSIZE / 8 ))
@@ -75,7 +75,7 @@ umount_all()
             if [ -n $1 ] && [ ! $1 = "$fstype" ]; then
 		continue
 	    fi
-	    if echo //proc//sys//run//dev//dev/pts// | grep /${target}//; then
+	    if echo //proc//sys//run//dev//dev/pts// | grep /${target}// >&3; then
 		continue
 	    fi
 	    mounts="$target $mounts"
@@ -120,7 +120,7 @@ if [ -x /run/initramfs/shutdown ]; then
     
     # Bind API filesystems
     (
-	wait $_dirs
+	cowberry-wait $_dirs
 	mount --bind /sys /run/initramfs/sys
 	mount --bind /proc /run/initramfs/proc
 	mount --bind /dev /run/initramfs/dev
