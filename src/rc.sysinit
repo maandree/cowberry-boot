@@ -22,10 +22,10 @@ exec 3>/dev/null
 deallocvt & _vt=$!
 
 # Bring up API filesystem mount points
+(mountpoint -q /dev || mount -t devtmpfs dev /dev -o mode=0755,nosuid ; mkdir -p /dev/pts /dev/shm) & _dev=$!
 (mountpoint -q /proc || mount -t proc proc /proc -o nosuid,noexec,nodev) & _proc=$!
 (mountpoint -q /sys || mount -t sysfs sys /sys -o nosuid,noexec,nodev) & _sys=$!
 (mountpoint -q /run || mount -t tmpfs run /run -o mode=0755,nosuid,nodev) & _run=$!
-(mountpoint -q /dev || mount -t devtmpfs dev /dev -o mode=0755,nosuid ; mkdir -p /dev/pts /dev/shm) & _dev=$!
 (cowberry-wait $_dev ; mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec) & _pts=$!
 (cowberry-wait $_dev ; mountpoint -q /dev/shm || mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev) & _shm=$!
 
