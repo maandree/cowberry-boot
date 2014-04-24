@@ -11,12 +11,23 @@ CONFS    = rc.conf inittab
 SOURCED  = rc.local.devd.wait
 EXECUTED = rc.local rc.local.hooks rc.local.shutdown rc.multi rc.shutdown rc.single rc.sysinit
 
+WARN = -Wall -Wextra -pedantic -Wdouble-promotion -Wformat=2 -Winit-self -Wmissing-include-dirs  \
+       -Wtrampolines -Wfloat-equal -Wshadow -Wmissing-prototypes -Wmissing-declarations          \
+       -Wredundant-decls -Wnested-externs -Winline -Wno-variadic-macros -Wsync-nand              \
+       -Wunsafe-loop-optimizations -Wcast-align -Wstrict-overflow -Wdeclaration-after-statement  \
+       -Wundef -Wbad-function-cast -Wcast-qual -Wwrite-strings -Wlogical-op -Waggregate-return   \
+       -Wstrict-prototypes -Wold-style-definition -Wpacked -Wvector-operation-performance        \
+       -Wunsuffixed-float-constants -Wsuggest-attribute=const -Wsuggest-attribute=noreturn       \
+       -Wsuggest-attribute=pure -Wsuggest-attribute=format -Wnormalized=nfkc -Wconversion        \
+       -fstrict-aliasing -fstrict-overflow -fipa-pure-const -ftree-vrp -fstack-usage             \
+       -funsafe-loop-optimizations
+
 
 .PHONY: all
 all: bin/cowberry-wait
 bin/cowberry-wait: src/cowberry-wait.c
 	mkdir -p bin
-	$(CC) -std=gnu90 -Wall -Wextra -pedantic -o $@ $^
+	$(CC) -std=gnu90 $(WARN) -o $@ $^
 
 .PHONY: install
 install: bin/cowberry-wait

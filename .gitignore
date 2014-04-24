@@ -11,4 +11,5 @@ obj/
 *.o
 *.out
 *.gch
+*.su
 

@@ -28,7 +28,7 @@
  */
 int main(int argc, char** argv)
 {
-  pid_t* pids = alloca(argc * sizeof(pid_t));
+  pid_t* pids = alloca((size_t)argc * sizeof(pid_t));
   int remaining = argc - 1, i;
   
   for (i = 1; i < argc; i++)
